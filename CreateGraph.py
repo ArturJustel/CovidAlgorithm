@@ -31,5 +31,5 @@ createMatrix(matrix)
 
 #Test case to check if the matrix is working, uncomment and enter as the input.
 # 2 2
-# A B
-# B A
+# 0 1
+# 1 0
