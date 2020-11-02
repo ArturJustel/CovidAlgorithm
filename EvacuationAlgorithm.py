@@ -1,6 +1,6 @@
 # This is the main class of the Covid algorithm.
 def main():
-    print("Hello Covid!")
+    print("Time to evacuate and fast!")
 # ToDo: call createGraph
 # ToDo: call algorithmExecuter
 
