@@ -14,7 +14,7 @@ def MatrixMaker():
 
     sourceNum , sinkNum = map(int,file.readline().split())
 
-    sourceArray = file.readline().split()
+    sourceArray = map(int,file.readline().split())
     sinkArray = file.readline().split()
 
     for i in range(int(roads)):
@@ -25,20 +25,33 @@ def MatrixMaker():
 
     return adArray,sourceNum,sinkNum,sourceArray,sinkArray
 
-def BSF(adArray,queue,sinkArray):
+def compPath(node,edge,i,paths):
+    for path in paths:
+        if int(path[1]) == node:
+            print("starting node: "+str(path[0])+" second node: "+ str(node) +" ending node: "+ str(i))
+
+def BFS(adArray,queue,sinkArray,paths):
     newQueue = []
     for node in queue:
-        print(node)
         i=0
-        for edge in adArray[int(node)]:
+        for edge in adArray[node]:
             if edge>0:
-                newQueue.append(i)
+                paths.append([node,i,edge])
+                if str(i) in sinkArray:
+                    print("here we calculate the path")
+                    compPath(node,edge,i,paths)
+                else:
+                    newQueue.append(i)
             i+=1
-    print(newQueue)
     if newQueue.__len__()>0:
-        BSF(adArray,newQueue,sinkArray)
+        BFS(adArray,newQueue,sinkArray,paths)
+    print(paths)
 
 if __name__ == "__main__":
     adArray, sourceNum, sinNum, sourceArray, sinkArray = MatrixMaker()
     print(adArray)
-    BSF(adArray,sourceArray,sinkArray)
+    print(sinkArray)
+    print(sourceArray)
+    paths = []
+    BFS(adArray,sourceArray,sinkArray,paths)
+    print(sinkArray)
