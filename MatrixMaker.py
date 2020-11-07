@@ -7,12 +7,12 @@ def MatrixMaker():
     file = open('samples-A/2.in', 'r')
     #file = sys.stdin
 
-    cities, roads = file.readline().split()
+    cities, roads = map(int,file.readline().split())
     print('cities: '+str(cities)+' roads: '+str(roads))
 
-    adArray = [[0 for i in range(int(cities))] for j in range(int(cities))]
+    adArray = [[0 for i in range(cities)] for j in range(cities)]
 
-    sourceNum , sinNum = file.readline().split()
+    sourceNum , sinNum = map(int,file.readline().split())
 
     sourceArray = file.readline()
     sinkArray = file.readline()
@@ -22,8 +22,8 @@ def MatrixMaker():
     print(sinkArray,end='')
 
     for i in range(int(roads)):
-        a,b,c = file.readline().split()
-        adArray[int(a)][int(b)] = int(c)
+        a,b,c = map(int,file.readline().split())
+        adArray[a][b] = c
 
     print(adArray)
 
