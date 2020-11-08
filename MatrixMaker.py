@@ -5,7 +5,7 @@ import struct
 
 def MatrixMaker():
 
-    file = open('samples-A/1.in', 'r')
+    file = open('sample-A.1.in', 'r')
     #file = sys.stdin
 
     cities, roads = map(int,file.readline().split())
@@ -14,8 +14,8 @@ def MatrixMaker():
 
     sourceNum , sinkNum = map(int,file.readline().split())
 
-    sourceArray = map(int,file.readline().split())
-    sinkArray = file.readline().split()
+    sourceArray = list(map(int,file.readline().split()))
+    sinkArray = list(map(int,file.readline().split()))
 
     for i in range(int(roads)):
         a,b,c = map(int,file.readline().split())
@@ -25,33 +25,49 @@ def MatrixMaker():
 
     return adArray,sourceNum,sinkNum,sourceArray,sinkArray
 
-def compPath(node,edge,i,paths):
-    for path in paths:
-        if int(path[1]) == node:
-            print("starting node: "+str(path[0])+" second node: "+ str(node) +" ending node: "+ str(i))
+def compPath(node,sourceArray,paths):
+    helpArray = list(reversed(paths))
+    print(helpArray)
+    helpArray = helpArray[1:]
+    for path in helpArray:
+        print("current path: ", path)
+        print("begining list:", paths, " and the node we are looking for: ", node, "and the sink ", sinkArray)
+        if path[0] in sourceArray and path[1] == node:
+            print("found the shortest route: ", paths)
+            return paths
+        if path[1] == node:
+            print("lets try again")
+            compPath(path[0],sinkArray,paths)
+        else:
+            paths.remove(path)
+            print("removed list: ", paths)
 
-def BFS(adArray,queue,sinkArray,paths):
+def BFS(adArray,queue,sinkArray,paths,visited):
     newQueue = []
     for node in queue:
         i=0
         for edge in adArray[node]:
             if edge>0:
                 paths.append([node,i,edge])
-                if str(i) in sinkArray:
+                if i in sinkArray:
                     print("here we calculate the path")
-                    compPath(node,edge,i,paths)
+                    shortestPath = compPath(node,sourceArray,paths)
+                    print("shortestPathBFS :",shortestPath)
+                    return shortestPath
+                elif i in visited:
+                    print("visited")
+                    continue
                 else:
+                    visited.append(i)
                     newQueue.append(i)
             i+=1
     if newQueue.__len__()>0:
-        BFS(adArray,newQueue,sinkArray,paths)
+        BFS(adArray,newQueue,sinkArray,paths,visited)
     print(paths)
 
 if __name__ == "__main__":
     adArray, sourceNum, sinNum, sourceArray, sinkArray = MatrixMaker()
-    print(adArray)
-    print(sinkArray)
-    print(sourceArray)
+    visited = sourceArray
     paths = []
-    BFS(adArray,sourceArray,sinkArray,paths)
-    print(sinkArray)
+    shortestPath = BFS(adArray,sourceArray,sinkArray,paths,visited)
+    print("shortestPathmain: ", shortestPath)
