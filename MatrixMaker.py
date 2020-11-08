@@ -3,8 +3,8 @@ import sys
 #The following function creates an adjacency matrix to represent a directed graph.
 def MatrixMaker():
 
-    file = open('sample-A.2.in', 'r')
-    #file = sys.stdin
+    #file = open('sample-A.2.in', 'r')
+    file = sys.stdin
 
     cities, roads = map(int,file.readline().split())
     adArray = [[0 for i in range(cities)] for j in range(cities)]
@@ -101,10 +101,7 @@ def sumFlowValue(g,sourceArray,sinkArray):
 
 if __name__ == "__main__":
     adArray, sourceNum, sinNum, sourceArray, sinkArray = MatrixMaker()
-    print('matrix is:',adArray)
-    print('source is:',sourceArray)
-    print('sink is:',sinkArray)
-
     g = Graph(adArray)
     final_max_flow = sumFlowValue(g,sourceArray,sinkArray)
-    print ("The maximum possible flow is",final_max_flow)
+    # print ("The maximum possible flow is",final_max_flow)
+    sys.stdout.write(str(final_max_flow))
