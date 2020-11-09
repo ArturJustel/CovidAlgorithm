@@ -3,8 +3,8 @@ import sys
 #The following function creates an adjacency matrix to represent a directed graph.
 def MatrixMaker():
 
-    #file = open('sample-A.2.in', 'r')
-    file = sys.stdin
+    file = open('sample-A.1.in', 'r')
+    # file = sys.stdin
 
     cities, roads = map(int,file.readline().split())
     adArray = [[0 for i in range(cities)] for j in range(cities)]
@@ -14,7 +14,7 @@ def MatrixMaker():
 
     for i in range(int(roads)):
         a,b,c = map(int,file.readline().split())
-        adArray[a][b] = c
+        adArray[a][b] += c
 
     file.close()
     return adArray,sourceNum,sinkNum,sourceArray,sinkArray
