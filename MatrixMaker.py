@@ -20,88 +20,60 @@ def MatrixMaker():
     return adArray,sourceNum,sinkNum,sourceArray,sinkArray
 
 class Graph:
+    #The following method transformes the adjacency matrix into a graph to make further operations easier.
     def __init__(self,graph): 
-        self.graph = graph # residual graph 
+        self.graph = graph
         self. ROW = len(graph) 
 
     #The following function performs the breadth-first search algorithm on the adjacency matrix,
     # to find the shortest path.
-    def BFS(self,s, t, parent): 
+    def BFS(self,s, t, track_list): 
   
-        # Mark all the vertices as not visited 
-        visited =[False]*(self.ROW) 
-          
-        # Create a queue for BFS 
-        queue=[] 
-          
-        # Mark the source node as visited and enqueue it 
-        queue.append(s) 
-        visited[s] = True
-           
-         # Standard BFS Loop 
-        while queue: 
-  
-            #Dequeue a vertex from queue and print it 
-            u = queue.pop(0) 
-          
-            # Get all adjacent vertices of the dequeued vertex u 
-            # If a adjacent has not been visited, then mark it 
-            # visited and enqueue it 
+        visited_list =[False]*(self.ROW) 
+        BFS_queue=[] 
+        BFS_queue.append(s) 
+        visited_list[s] = True
+        #BFS loop   
+        while BFS_queue: 
+            u = BFS_queue.pop(0) 
             for ind, val in enumerate(self.graph[u]): 
-                if visited[ind] == False and val > 0 : 
-                    queue.append(ind) 
-                    visited[ind] = True
-                    parent[ind] = u 
-  
-        # If we reached sink in BFS starting from source, then return 
-        # true, else false 
-        return True if visited[t] else False
+                if visited_list[ind] == False and val > 0 : 
+                    BFS_queue.append(ind) 
+                    visited_list[ind] = True
+                    track_list[ind] = u 
+        return True if visited_list[t] else False
 
     #The following function performs the Ford-Fulkerson Algorithm on the shortest path to find the maximum flow.
     def FordFulkerson(self, source, sink): 
+   
+        track_list = [-1]*(self.ROW) 
+        max_flow = 0
   
-        # This array is filled by BFS and to store path 
-        parent = [-1]*(self.ROW) 
-  
-        max_flow = 0 # There is no flow initially 
-  
-        # Augment the flow while there is path from source to sink 
-        while self.BFS(source, sink, parent) : 
-  
-            # Find minimum residual capacity of the edges along the 
-            # path filled by BFS. Or we can say find the maximum flow 
-            # through the path found. 
+        while self.BFS(source, sink, track_list) : 
             path_flow = float("Inf") 
             s = sink 
             while(s !=  source): 
-                path_flow = min (path_flow, self.graph[parent[s]][s]) 
-                s = parent[s] 
-  
-            # Add path flow to overall flow 
+                path_flow = min (path_flow, self.graph[track_list[s]][s]) 
+                s = track_list[s] 
             max_flow +=  path_flow 
-  
-            # update residual capacities of the edges and reverse edges 
-            # along the path 
             v = sink 
             while(v !=  source): 
-                u = parent[v] 
+                u = track_list[v] 
                 self.graph[u][v] -= path_flow 
                 self.graph[v][u] += path_flow 
-                v = parent[v] 
-  
+                v = track_list[v] 
         return max_flow
 
 #The following function combines obtained max flow values and returns the final max flow value.
-def sumFlowValue(g,sourceArray,sinkArray):
-    final_flow = 0
+def sumFlowValue(graph,sourceArray,sinkArray):
+    final_max_flow_value = 0
     for i in range(len(sourceArray)):
-      max_flow =  g.FordFulkerson(sourceArray[i], sinkArray[i])
-      final_max_flow = final_flow + max_flow
-    return final_max_flow
+      max_flow =  graph.FordFulkerson(sourceArray[i], sinkArray[i])
+      final_max_flow_value = final_max_flow_value + max_flow
+    return final_max_flow_value
 
 if __name__ == "__main__":
     adArray, sourceNum, sinNum, sourceArray, sinkArray = MatrixMaker()
-    g = Graph(adArray)
-    final_max_flow = sumFlowValue(g,sourceArray,sinkArray)
-    # print ("The maximum possible flow is",final_max_flow)
-    sys.stdout.write(str(final_max_flow))
+    graph = Graph(adArray)
+    final_max_flow_value = sumFlowValue(graph,sourceArray,sinkArray)
+    sys.stdout.write(str(final_max_flow_value))
